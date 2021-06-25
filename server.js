@@ -19,7 +19,7 @@ server.use(express.json());
 server.get('/books',getbooksHandler);
 server.post('/books',pushaddBookHandler);
 server.delete('/books/:index',deleteBookHandler);
-
+server.put('/updateBook/ondex',upteBookHandler);
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost:27017/books', {useNewUrlParser: true, useUnifiedTopology: true});
@@ -154,6 +154,22 @@ return item;
     res.send(userData[0].books)
 })
 } 
+
+function upteBookHandler(req,res){
+    const{email,name,description,img,index}=req.body;
+    const index=Number(req.params.index);
+    userModel.findOne({email: email},(error,userModel)=>{
+        userModel.books.splice(index,1,{
+name: name,
+description: description,
+img:img,
+status:status
+
+        })
+        userModel.save();
+        res.send(userModel.books)
+    })
+}
 
 server.get('/', homeHandler);
 
